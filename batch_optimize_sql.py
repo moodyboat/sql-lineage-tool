@@ -116,6 +116,21 @@ class AdvancedSQLOptimizer:
         for chinese, english in replacements.items():
             sql = sql.replace(chinese, english)
 
+        # 临时处理模板变量，避免解析错误
+        # 将 <!VAR!> 替换为安全的占位符
+        import re
+        self.template_vars = {}
+
+        def replace_template(match):
+            var_name = match.group(1)
+            # 为每个变量生成唯一占位符
+            placeholder = f"__TEMPLATE_VAR_{var_name}__"
+            # 保存原始变量以便恢复
+            self.template_vars[placeholder] = match.group(0)
+            return placeholder
+
+        sql = re.sub(r'<!([A-Z_]+)!>', replace_template, sql)
+
         return sql
 
     def _full_optimization(self, sql):
@@ -130,7 +145,18 @@ class AdvancedSQLOptimizer:
             optimized = expr.sql(dialect='oracle', pretty=True)
             optimized_statements.append(optimized)
 
-        return '\n\n'.join(optimized_statements)
+        result = '\n\n'.join(optimized_statements)
+
+        # 恢复模板变量
+        result = self._restore_template_vars(result)
+        return result
+
+    def _restore_template_vars(self, sql):
+        """恢复模板变量"""
+        if hasattr(self, 'template_vars'):
+            for placeholder, original in self.template_vars.items():
+                sql = sql.replace(placeholder, original)
+        return sql
 
     def _formatting_only(self, sql):
         """仅格式化：保持原方言"""
@@ -144,7 +170,12 @@ class AdvancedSQLOptimizer:
                 formatted = expr.sql(dialect='oracle', pretty=True)
                 formatted_statements.append(formatted)
 
-            return '\n\n'.join(formatted_statements)
+            result = '\n\n'.join(formatted_statements)
+
+            # 恢复模板变量
+            result = self._restore_template_vars(result)
+            return result
+
         except:
             # 如果解析失败，返回原始SQL
             return sql
