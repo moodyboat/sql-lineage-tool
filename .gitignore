@@ -40,3 +40,5 @@ Thumbs.db
 *.sql
 *_nodes.json
 *.log
+*_test_results.json
+*_test.py
