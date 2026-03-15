@@ -1,0 +1,4060 @@
+[
+  {
+    "task_name": "01_内部对账余额表-存款类",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/01_内部对账余额表-存款类/原始.sql",
+    "total_nodes": 230,
+    "total_relationships": 894,
+    "total_fields": 728,
+    "total_field_relationships": 758,
+    "output_node_id": "ROOT_BLK_1_SQ_t",
+    "output_fields_count": 35,
+    "traced_fields_count": 35,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "客户ID",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "币种",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "JSZHZD_WBBH",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "客户状态",
+        "type": "FUNCTION",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "客户类型",
+        "type": "COLUMN",
+        "table_name": "f1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "活期",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "工商银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "建设银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "农业银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "中国银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "交通银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "北京银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "招商银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "光大银行",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "定期存款",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "通知存款",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "保证金存款余额",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "委托存款余额",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "结算存款利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "保证金利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "工行存款利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "招行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "建行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "北京银行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "交通银行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "光大银行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "中国银行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "农业银行利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "定期利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "通知利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "协定利息支出",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "应付利息",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "02_内部对账余额表-贷款类",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/02_内部对账余额表-贷款类/原始.sql",
+    "total_nodes": 594,
+    "total_relationships": 1939,
+    "total_fields": 1316,
+    "total_field_relationships": 2204,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 24,
+    "traced_fields_count": 24,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "CUST_CODE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 12,
+        "has_source": true
+      },
+      {
+        "name": "CUST_ID",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 12,
+        "has_source": true
+      },
+      {
+        "name": "CUST_NAME",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 12,
+        "has_source": true
+      },
+      {
+        "name": "F_WBMC",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 6,
+        "has_source": true
+      },
+      {
+        "name": "JSZHZD_WBBH",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 5,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "客户类型",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "自营短期",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "自营中长期",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "保理短期",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "保理中长期",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "委贷",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "自营短期利息收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "自营中长期利息收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "委托贷款利息收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "委托贷款利息支出",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "融资租赁余额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "保理利息收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "租赁利息收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "受托贷款手续费收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "票据承兑手续费收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "保函手续费收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "保险代理手续费收入",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "应收利息",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "04_存款计提测算-支取记录",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/04_存款计提测算-支取记录/原始.sql",
+    "total_nodes": 15,
+    "total_relationships": 30,
+    "total_fields": 32,
+    "total_field_relationships": 43,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 13,
+    "traced_fields_count": 13,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书内码",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书编号",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存款类型",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存入日期",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书利率",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "支取日期",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "支取金额",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "支取方式",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "交易流水号",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "币种编号",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "币种",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "06_存款计提测算-存入记录",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/06_存款计提测算-存入记录/原始.sql",
+    "total_nodes": 11,
+    "total_relationships": 22,
+    "total_fields": 16,
+    "total_field_relationships": 9,
+    "output_node_id": "ROOT_BLK_1_SQ_cd",
+    "output_fields_count": 11,
+    "traced_fields_count": 11,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "证实书内码",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "证实书编号",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "存款类型",
+        "type": "FUNCTION",
+        "table_name": "ST",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "存入日期",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "flag",
+        "type": "FUNCTION",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "证实书利率",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "存入金额",
+        "type": "COLUMN",
+        "table_name": "st",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "币种编号",
+        "type": "COLUMN",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "币种",
+        "type": "COLUMN",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "07_存款计提测算-交易流水",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/07_存款计提测算-交易流水/原始.sql",
+    "total_nodes": 6,
+    "total_relationships": 5,
+    "total_fields": 13,
+    "total_field_relationships": 13,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 13,
+    "traced_fields_count": 13,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "交易日期",
+        "type": "COLUMN",
+        "table_name": "jspzk",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "主交易流水",
+        "type": "COLUMN",
+        "table_name": "tran_flow",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "交易流水",
+        "type": "COLUMN",
+        "table_name": "jspzk",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_pznm",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_flnm",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_flbh",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_kmbh",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_zhbh",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_zy",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jspzfl_je",
+        "type": "COLUMN",
+        "table_name": "jspzfl",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "币种编号",
+        "type": "COLUMN",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "币种",
+        "type": "COLUMN",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借贷方向",
+        "type": "FUNCTION",
+        "table_name": "l",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "08_活期协定计提测算",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/08_活期协定计提测算/原始.sql",
+    "total_nodes": 8,
+    "total_relationships": 7,
+    "total_fields": 12,
+    "total_field_relationships": 18,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 12,
+    "traced_fields_count": 12,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "币种",
+        "type": "COLUMN",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "单位编号",
+        "type": "COLUMN",
+        "table_name": "dwd_jszhzd_his",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "单位名称",
+        "type": "COLUMN",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "账户",
+        "type": "COLUMN",
+        "table_name": "jszhyeb",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "日期",
+        "type": "COLUMN",
+        "table_name": "jszhyeb",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "余额",
+        "type": "FUNCTION",
+        "table_name": "y",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "协定余额",
+        "type": "UNKNOWN",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "活期余额",
+        "type": "UNKNOWN",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "协定利率",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "活期利率",
+        "type": "FUNCTION",
+        "table_name": "c",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "协定日期",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "协议号",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "09_活期协定存款业务台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/09_活期协定存款业务台账/原始.sql",
+    "total_nodes": 8,
+    "total_relationships": 19,
+    "total_fields": 23,
+    "total_field_relationships": 28,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 16,
+    "traced_fields_count": 16,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "账户编号",
+        "type": "COLUMN",
+        "table_name": "F_ZJ_HQXDCKYWTZ",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "账户名称",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "余额日期",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "F_ZJ_HQXDCKYWTZ",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借方发生额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贷方发生额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "期末余额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "是否协定账户",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "协定余额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "协定余额日均规模",
+        "type": "FUNCTION",
+        "table_name": "XD",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "活期余额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "活期余额日均规模",
+        "type": "FUNCTION",
+        "table_name": "HQ",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "科目编号",
+        "type": "COLUMN",
+        "table_name": "F_ZJ_HQXDCKYWTZ",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "科目名称",
+        "type": "COLUMN",
+        "table_name": "F_ZJ_HQXDCKYWTZ",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "10_通知存款业务台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/10_通知存款业务台账/原始.sql",
+    "total_nodes": 15,
+    "total_relationships": 36,
+    "total_fields": 24,
+    "total_field_relationships": 29,
+    "output_node_id": "ROOT_BLK_1_SQ_1",
+    "output_fields_count": 14,
+    "traced_fields_count": 14,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "COLUMN",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "SCALAR_QUERY",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "证实书内码",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书编号",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存款类型",
+        "type": "UNKNOWN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "存入日期",
+        "type": "FUNCTION",
+        "table_name": "ST",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存入金额",
+        "type": "UNKNOWN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "FUNCTION",
+        "table_name": "ST",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书利率",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "支取日期",
+        "type": "FUNCTION",
+        "table_name": "tmp",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "支取金额",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "期末余额",
+        "type": "FUNCTION",
+        "table_name": "J",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "日均规模",
+        "type": "FUNCTION",
+        "table_name": "J",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "11_定期存款业务台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/11_定期存款业务台账/原始.sql",
+    "total_nodes": 15,
+    "total_relationships": 36,
+    "total_fields": 24,
+    "total_field_relationships": 29,
+    "output_node_id": "ROOT_BLK_1_SQ_1",
+    "output_fields_count": 14,
+    "traced_fields_count": 14,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "COLUMN",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "COLUMN",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "SCALAR_QUERY",
+        "table_name": "DW_CUST_CORP_LE_F_BK",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "证实书内码",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书编号",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存款类型",
+        "type": "UNKNOWN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "存入日期",
+        "type": "FUNCTION",
+        "table_name": "ST",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "存入金额",
+        "type": "UNKNOWN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "FUNCTION",
+        "table_name": "ST",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "证实书利率",
+        "type": "COLUMN",
+        "table_name": "ST_PROTOCOL",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "支取日期",
+        "type": "FUNCTION",
+        "table_name": "tmp",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "支取金额",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "期末余额",
+        "type": "FUNCTION",
+        "table_name": "J",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "日均规模",
+        "type": "FUNCTION",
+        "table_name": "J",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "12_贴现业务台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/12_贴现业务台账/原始.sql",
+    "total_nodes": 50,
+    "total_relationships": 126,
+    "total_fields": 61,
+    "total_field_relationships": 68,
+    "output_node_id": "ROOT_BLK_1_SQ_1",
+    "output_fields_count": 20,
+    "traced_fields_count": 20,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "票据类型",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "合同编号",
+        "type": "COLUMN",
+        "table_name": "BL_DISCOUNT_APP",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "业务类型",
+        "type": "FUNCTION",
+        "table_name": "BD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "票据号码",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "票据子号码",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "出票人",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "票据开始日",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现人名称",
+        "type": "FUNCTION",
+        "table_name": "C",
+        "dependencies_count": 5,
+        "has_source": true
+      },
+      {
+        "name": "贴现人二级单位",
+        "type": "FUNCTION",
+        "table_name": "C",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现人上一手",
+        "type": "FUNCTION",
+        "table_name": "BS",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "承兑人",
+        "type": "COLUMN",
+        "table_name": "BL_STOCKBILL_HIS",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "付息方式",
+        "type": "FUNCTION",
+        "table_name": "BD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "票面金额",
+        "type": "COLUMN",
+        "table_name": "BL_TOSIGN_RECORD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现日",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "票据到期日",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现天数",
+        "type": "COLUMN",
+        "table_name": "BL_TOSIGN_RECORD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现利率",
+        "type": "COLUMN",
+        "table_name": "BL_TOSIGN_RECORD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贴现利息",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "实付金额",
+        "type": "FUNCTION",
+        "table_name": "BT",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "日均规模",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "13_信贷不含贴现业务台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/13_信贷不含贴现业务台账/原始.sql",
+    "total_nodes": 142,
+    "total_relationships": 454,
+    "total_fields": 490,
+    "total_field_relationships": 751,
+    "output_node_id": "ROOT_BLK_1_SQ_2_UNION_0_UNION_1_SQ_3_UNION_2",
+    "output_fields_count": 23,
+    "traced_fields_count": 23,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "客户编号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "借款单位名称",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "所属二级单位",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "对应成员单位",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "贷款合同号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "业务大类",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "业务子类型",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "执行利率(%)",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "主要担保方式",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "贷款借据编号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "借据放款金额",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "GRANT_DATE",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "借据到期日",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "期限",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "五级分类",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "信用评级",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "放款日期",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "放款",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "还款日期",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "还款",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "备注",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "期末余额",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "日均规模",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "14_贷款-借据维度余额及发生额明细",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/14_贷款-借据维度余额及发生额明细/原始.sql",
+    "total_nodes": 497,
+    "total_relationships": 1464,
+    "total_fields": 1040,
+    "total_field_relationships": 1962,
+    "output_node_id": "ROOT_BLK_1_SQ_1_SQ_tr",
+    "output_fields_count": 27,
+    "traced_fields_count": 27,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "老客户编号",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "新客户编号",
+        "type": "COLUMN",
+        "table_name": "i",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "COLUMN",
+        "table_name": "i",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "借据号",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "合同号",
+        "type": "COLUMN",
+        "table_name": "dwd_Corp_Loan_Cont_Base_his",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "合同金额",
+        "type": "COLUMN",
+        "table_name": "dwd_Corp_Loan_Cont_Base_his",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "已放款金额",
+        "type": "COLUMN",
+        "table_name": "dwd_Corp_Loan_Cont_Base_his",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贷款产品类型",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贷款类型",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "签订日期",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "发放日期",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "实际到期日",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借据金额",
+        "type": "COLUMN",
+        "table_name": "corp_loan_due_bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "放款金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "本期放款金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "还款金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "本期还款金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "本期转逾期金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借据余额",
+        "type": "FUNCTION",
+        "table_name": "t",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "担保方式",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "期限",
+        "type": "FUNCTION",
+        "table_name": "t",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "利率",
+        "type": "FUNCTION",
+        "table_name": "ra",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "合同到期状态",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "账面实提利息",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "账面实提利息不含税",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "担保客户",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "15_贷款-放还款明细",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/15_贷款-放还款明细/原始.sql",
+    "total_nodes": 33,
+    "total_relationships": 77,
+    "total_fields": 92,
+    "total_field_relationships": 152,
+    "output_node_id": "ROOT_UNION_0_UNION_1",
+    "output_fields_count": 14,
+    "traced_fields_count": 14,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "老客户编号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "新客户编号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "客户名称",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "借据号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "合同号",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "合同金额",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "签订日期",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "发放日期",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "实际到期日",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "借据金额",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bzns_date",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "类型",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bzns_amt",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "16_逾期展期",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/16_逾期展期/原始.sql",
+    "total_nodes": 5,
+    "total_relationships": 4,
+    "total_fields": 7,
+    "total_field_relationships": 9,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 7,
+    "traced_fields_count": 7,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "cont_code",
+        "type": "COLUMN",
+        "table_name": "dwd_corp_loan_cont_base_his",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "due_bill_code",
+        "type": "COLUMN",
+        "table_name": "Corp_Loan_Due_Bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "类型",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "贷款金额",
+        "type": "COLUMN",
+        "table_name": "Corp_Loan_Due_Bill",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "bzns_date",
+        "type": "COLUMN",
+        "table_name": "Corp_Loan_Stdbook",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "金额",
+        "type": "FUNCTION",
+        "table_name": "s",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "利率",
+        "type": "FUNCTION",
+        "table_name": "b",
+        "dependencies_count": 3,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "18_委贷手续费",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/18_委贷手续费/原始.sql",
+    "total_nodes": 8,
+    "total_relationships": 13,
+    "total_fields": 22,
+    "total_field_relationships": 34,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 10,
+    "traced_fields_count": 10,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "借据号",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借据开始日",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借据结束日",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "借据金额",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "交易流水",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "费率",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "FEE_AMT",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "不含税手续费",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "备注",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "余额方向",
+        "type": "COLUMN",
+        "table_name": "tmp",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "19_委托贷款发生明细台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/19_委托贷款发生明细台账/原始.sql",
+    "total_nodes": 249,
+    "total_relationships": 820,
+    "total_fields": 699,
+    "total_field_relationships": 874,
+    "output_node_id": "ROOT_BLK_3_SQ_83_UNION_1",
+    "output_fields_count": 41,
+    "traced_fields_count": 41,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "ejdw",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_code",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_name",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "grantname",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cont_code",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "ext_cont_no",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_loan_subtype",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "totamt",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "curcd",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "due_bill_code",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "jjje",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "ffje",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "GRANT_DATE",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "INTRATE",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "zqje",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "OLD_CONT_END_DATE",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "ext_rate",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "hkje",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "HKRQ",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "FACT_END_DATE",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "DQRQ",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "loan_bal",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "yzflx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "GRANT_SETTLE_ACTNO",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "RECV_ACTNO",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "jjqcye",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "sxf",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "hxje",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "hxrq",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "f_wbbh",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "f_wbdm",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "f_wbmc",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "hl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "f_wbbjf",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "F_GBSZM",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "F_BZDW",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "F_DYHSBH",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "f_hszz",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "keyid",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "VALUEZD",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "order_num",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "20_委托贷款合同情况表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/20_委托贷款合同情况表/原始.sql",
+    "total_nodes": 46,
+    "total_relationships": 101,
+    "total_fields": 56,
+    "total_field_relationships": 70,
+    "output_node_id": "ROOT_CT_temp",
+    "output_fields_count": 24,
+    "traced_fields_count": 24,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "GSEJDW",
+        "type": "SCALAR_QUERY",
+        "table_name": "dw_cust_corp_le_f_bk",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "GRANTNAME",
+        "type": "SCALAR_QUERY",
+        "table_name": "CUST_CORP_INFO",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_NAME",
+        "type": "COLUMN",
+        "table_name": "CUST_CORP_INFO",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_code",
+        "type": "COLUMN",
+        "table_name": "cc",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "CONT_CODE",
+        "type": "COLUMN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_LOAN_SUBTYPE",
+        "type": "COLUMN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "valuezd",
+        "type": "COLUMN",
+        "table_name": "h",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "totamt",
+        "type": "FUNCTION",
+        "table_name": "HT",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "WFKJE",
+        "type": "FUNCTION",
+        "table_name": "HT",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "DKYE",
+        "type": "FUNCTION",
+        "table_name": "JJ",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "LJZFLX",
+        "type": "FUNCTION",
+        "table_name": "XD",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "DNZFLX",
+        "type": "ARITHMETIC",
+        "table_name": "BK",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CURCD",
+        "type": "COLUMN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "BZ",
+        "type": "SCALAR_QUERY",
+        "table_name": "lswbzd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "INTRATE",
+        "type": "ARITHMETIC",
+        "table_name": "HT",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "FEE_RATE",
+        "type": "ARITHMETIC",
+        "table_name": "HT",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "LXSQFS",
+        "type": "UNKNOWN",
+        "table_name": "ht",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "AMT_SOURCE",
+        "type": "UNKNOWN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "INT_PERIOD",
+        "type": "UNKNOWN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "START_DATE",
+        "type": "COLUMN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "END_DATE",
+        "type": "COLUMN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "htqzr",
+        "type": "FUNCTION",
+        "table_name": "HT",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "QDR",
+        "type": "FUNCTION",
+        "table_name": "HT",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "CONT_STAT",
+        "type": "UNKNOWN",
+        "table_name": "CORP_LOAN_CONT_BASE",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "21_委托贷款资金来源余额表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/21_委托贷款资金来源余额表/原始.sql",
+    "total_nodes": 17,
+    "total_relationships": 44,
+    "total_fields": 70,
+    "total_field_relationships": 117,
+    "output_node_id": "ROOT_BLK_1_SQ_t_UNION_0_UNION_1",
+    "output_fields_count": 10,
+    "traced_fields_count": 10,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "cust_code",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "rn1",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "DWMC",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "ZYZJ",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "QTLY",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "QYZ",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "QTQYZ",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "WB",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "QTWB",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "EJDW",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "22_贷款合同情况表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/22_贷款合同情况表/原始.sql",
+    "total_nodes": 57,
+    "total_relationships": 122,
+    "total_fields": 77,
+    "total_field_relationships": 120,
+    "output_node_id": "ROOT_CT_temp",
+    "output_fields_count": 25,
+    "traced_fields_count": 25,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "ejdw",
+        "type": "SCALAR_QUERY",
+        "table_name": "dw_cust_corp_le_f_bk",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "cust_name",
+        "type": "COLUMN",
+        "table_name": "cust_corp_info",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_code",
+        "type": "COLUMN",
+        "table_name": "cust_corp_info",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cont_code",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_loan_subtype",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "ywzlx",
+        "type": "FUNCTION",
+        "table_name": "pd",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "htje",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "wfkje",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "dkye",
+        "type": "FUNCTION",
+        "table_name": "jj",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "ljzflx",
+        "type": "ARITHMETIC",
+        "table_name": "xd",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "dnzflx",
+        "type": "ARITHMETIC",
+        "table_name": "bk",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "curcd",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "bz",
+        "type": "SCALAR_QUERY",
+        "table_name": "lswbzd",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "intrate",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "int_period",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "jxfs",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "gart_mode",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "dbfx",
+        "type": "SCALAR_QUERY",
+        "table_name": "pub_dict_item",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "gart_name",
+        "type": "SCALAR_QUERY",
+        "table_name": "",
+        "dependencies_count": 5,
+        "has_source": true
+      },
+      {
+        "name": "relt_no",
+        "type": "SCALAR_QUERY",
+        "table_name": "",
+        "dependencies_count": 5,
+        "has_source": true
+      },
+      {
+        "name": "htqzr",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "end_date",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "start_date",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cont_stat",
+        "type": "COLUMN",
+        "table_name": "corp_loan_cont_base",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "htzt",
+        "type": "FUNCTION",
+        "table_name": "ht",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "24_信贷业务办理情况表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/24_信贷业务办理情况表/原始.sql",
+    "total_nodes": 684,
+    "total_relationships": 2655,
+    "total_fields": 2520,
+    "total_field_relationships": 4629,
+    "output_node_id": "ROOT_BLK_14",
+    "output_fields_count": 40,
+    "traced_fields_count": 40,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "CUST_CODE1",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "CUST_CODE",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 18,
+        "has_source": true
+      },
+      {
+        "name": "RN1",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "CUST_NAME",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 18,
+        "has_source": true
+      },
+      {
+        "name": "CUST_SHORT_NAME",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "CUST_TYPE",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "N_LE",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "ZY_FK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "ZY_BS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "ZY_HK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "ZY_HBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "WT_FK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "WT_BS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "WT_HK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "WT_HBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "BL_FK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "BL_BS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "BL_HK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "BL_HBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 4,
+        "has_source": true
+      },
+      {
+        "name": "CPJE",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "CPBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DFJE",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DFBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "CZJE",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "CZBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "FKAMT",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "XZBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "HKAMT",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DQBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "AMT_FK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "CNTA",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "AMT_HK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "CNTB",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "ZMJE",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "ZMBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DK_HK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DK_HBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DK_FK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "DK_FBS",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 3,
+        "has_source": true
+      },
+      {
+        "name": "MX",
+        "type": "COLUMN",
+        "table_name": "TMP_FK",
+        "dependencies_count": 0,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "25_信贷业务客户贡献度表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/25_信贷业务客户贡献度表/原始.sql",
+    "total_nodes": 3,
+    "total_relationships": 2,
+    "total_fields": 28,
+    "total_field_relationships": 29,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 28,
+    "traced_fields_count": 28,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "EJDW",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "CUST_NAME1",
+        "type": "FUNCTION",
+        "table_name": "A",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "rn1",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_code",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_name",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_short_name",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "cust_type",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "le",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "n_le",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "mx",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "INTER_FACETIME",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LX",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_ZYDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_ZYDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_PJDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_PJDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_PJTX",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_PJTX",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_BL",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_BL",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_RZZL",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_RZZL",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_WTDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_WTDK",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_PJCD",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_PJCD",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_BH",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_BH",
+        "type": "ARITHMETIC",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "26_授信使用情况表",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/26_授信使用情况表/原始.sql",
+    "total_nodes": 8,
+    "total_relationships": 13,
+    "total_fields": 151,
+    "total_field_relationships": 144,
+    "output_node_id": "ROOT_BLK_1_SQ_1_UNION_0",
+    "output_fields_count": 38,
+    "traced_fields_count": 38,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "rn1",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_code2",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_code",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_name",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_zy",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mzy",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_cd",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mpjcd",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_tx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "msptx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_bh",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mbh",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_xyz",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mxyz",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_bl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mbl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_rzzl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mrzzl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bsns_date_qt",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mqt",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "zy",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "pjcd",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "sptx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bh",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "xyz",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "bl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "rzzl",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "qt",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "interface_time",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_type",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "cust_short_name",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "n_le",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "lx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "mx",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "sfzr",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "sfz",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "shj",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "sh_amount",
+        "type": "UNION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "27_客户贡献度",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/27_客户贡献度/原始.sql",
+    "total_nodes": 3,
+    "total_relationships": 2,
+    "total_fields": 37,
+    "total_field_relationships": 38,
+    "output_node_id": "ROOT_BLK_1",
+    "output_fields_count": 37,
+    "traced_fields_count": 37,
+    "untraced_fields_count": 0,
+    "success_rate": 100.0,
+    "traced_fields": [
+      {
+        "name": "CUST_NAME1",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RN1",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_CODE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_NAME",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_SHORT_NAME",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "GQLX",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_SCOPE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CUST_TYPE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "JMFL",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "N_LE",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "MX",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "INTER_FACETIME",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_ZYDK",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_MFXD",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_PJTX",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_BL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "YE_RZZL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_ZYDK",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_MFXD",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_PJTX",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_BL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "RJ_RZZL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LYE_ZYDK",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LYE_MFXD",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LYE_PJTX",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LYE_BL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LYE_RZZL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LRJ_ZYDK",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LRJ_MFXD",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LRJ_PJTX",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LRJ_BL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LRJ_RZZL",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CKYE",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "CKRJ",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LTQYE",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "LTQRJ",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [],
+    "status": "success"
+  },
+  {
+    "task_name": "17_承兑手续费",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/17_承兑手续费/原始.sql",
+    "total_nodes": 10,
+    "total_relationships": 17,
+    "total_fields": 30,
+    "total_field_relationships": 40,
+    "output_node_id": "ROOT_BLK_1_SQ_t",
+    "output_fields_count": 14,
+    "traced_fields_count": 13,
+    "untraced_fields_count": 1,
+    "success_rate": 92.85714285714286,
+    "traced_fields": [
+      {
+        "name": "承兑类型",
+        "type": "FUNCTION",
+        "table_name": "p",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "承兑合同号",
+        "type": "COLUMN",
+        "table_name": "bl_bill_cont",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "承兑汇票号",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "申请人客户编号",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "申请人",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "收款人",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "担保方式",
+        "type": "FUNCTION",
+        "table_name": "C",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "出票金额",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "出票日期",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "到期日期",
+        "type": "COLUMN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "解付日期",
+        "type": "UNKNOWN",
+        "table_name": "PJYFKC",
+        "dependencies_count": 1,
+        "has_source": true
+      },
+      {
+        "name": "解付金额",
+        "type": "FUNCTION",
+        "table_name": "",
+        "dependencies_count": 2,
+        "has_source": true
+      },
+      {
+        "name": "票据状态从22到42",
+        "type": "COLUMN",
+        "table_name": "",
+        "dependencies_count": 1,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [
+      {
+        "name": "担保人",
+        "type": "LITERAL",
+        "table_name": "",
+        "dependencies_count": 0,
+        "has_source": false
+      }
+    ],
+    "status": "partial"
+  },
+  {
+    "task_name": "03_内部对账余额表-票据类",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/03_内部对账余额表-票据类/原始.sql",
+    "total_nodes": 34,
+    "total_relationships": 86,
+    "total_fields": 46,
+    "total_field_relationships": 70,
+    "output_node_id": "ROOT_BLK_1_SQ_t",
+    "output_fields_count": 7,
+    "traced_fields_count": 6,
+    "untraced_fields_count": 1,
+    "success_rate": 85.71428571428571,
+    "traced_fields": [
+      {
+        "name": "cust_code",
+        "type": "COLUMN",
+        "table_name": "i",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "cust_name",
+        "type": "COLUMN",
+        "table_name": "i",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "cust_id",
+        "type": "COLUMN",
+        "table_name": "i",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "贴现金额",
+        "type": "FUNCTION",
+        "table_name": "t2",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "贴现利息收入",
+        "type": "FUNCTION",
+        "table_name": "t1",
+        "dependencies_count": 0,
+        "has_source": true
+      },
+      {
+        "name": "承兑余额",
+        "type": "FUNCTION",
+        "table_name": "t3",
+        "dependencies_count": 0,
+        "has_source": true
+      }
+    ],
+    "untraced_fields": [
+      {
+        "name": "JSPZFL_BZ",
+        "type": "LITERAL",
+        "table_name": "",
+        "dependencies_count": 0,
+        "has_source": false
+      }
+    ],
+    "status": "partial"
+  },
+  {
+    "task_name": "05_存款计提测算-期末余额",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/05_存款计提测算-期末余额/原始.sql",
+    "status": "error",
+    "error": "Invalid expression / Unexpected token. Line 123, Col: 6.\n  .cust_code,\n    st.protocol_code,\n    st.start_accual_date\n) cd\n\n/* 1-2-3 存款计提测算-存入记录\t*/ /* 存入记录 */\n\u001b[4mSELECT\u001b[0m\n  *\nFROM (\n  SELECT\n    st.cust_code AS 客户编号,\n    st.protocol_id AS 证实书内码,\n    st.protocol_code AS "
+  },
+  {
+    "task_name": "23_贷款发生明细台账",
+    "file_path": "/Users/gonghang/Desktop/产品/血缘分析工具/优化后/23_贷款发生明细台账/原始.sql",
+    "status": "error",
+    "error": "object of type 'NoneType' has no len()"
+  }
+]
