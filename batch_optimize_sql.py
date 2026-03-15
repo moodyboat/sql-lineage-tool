@@ -103,8 +103,9 @@ class AdvancedSQLOptimizer:
                 return self._basic_cleanup(sql), 'basic'
 
     def _preprocess_sql(self, sql):
-        """预处理SQL"""
-        # 处理中文标点符号
+        """预处理SQL - 保持模板变量原样，但让sqlglot能解析"""
+
+        # 1. 处理中文标点符号
         replacements = {
             '，': ',',
             '；': ';',
@@ -116,20 +117,19 @@ class AdvancedSQLOptimizer:
         for chinese, english in replacements.items():
             sql = sql.replace(chinese, english)
 
-        # 临时处理模板变量，避免解析错误
-        # 将 <!VAR!> 替换为安全的占位符
+        # 2. 临时处理模板变量，让sqlglot能解析，但稍后恢复原样
         import re
         self.template_vars = {}
 
-        def replace_template(match):
+        def replace_with_safe_placeholder(match):
             var_name = match.group(1)
-            # 为每个变量生成唯一占位符
-            placeholder = f"__TEMPLATE_VAR_{var_name}__"
-            # 保存原始变量以便恢复
+            # 使用安全的标识符占位符，让sqlglot能解析
+            placeholder = f"__SAFE_VAR_{var_name}__"
+            # 保存原始模板变量以便恢复
             self.template_vars[placeholder] = match.group(0)
             return placeholder
 
-        sql = re.sub(r'<!([A-Z_]+)!>', replace_template, sql)
+        sql = re.sub(r'<!([A-Z_]+)!>', replace_with_safe_placeholder, sql)
 
         return sql
 
