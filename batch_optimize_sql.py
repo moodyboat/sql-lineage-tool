@@ -119,15 +119,15 @@ class AdvancedSQLOptimizer:
         return sql
 
     def _full_optimization(self, sql):
-        """完全优化：方言转换 + 格式化"""
-        # 解析为AST
+        """完全优化：Oracle方言格式化"""
+        # 解析为AST (Oracle方言)
         ast = parse(sql, dialect='oracle', read='oracle')
 
-        # 转换为目标方言
+        # 保持Oracle方言，只做格式化
         optimized_statements = []
         for expr in ast:
-            # 转换方言并格式化（不使用optimize参数）
-            optimized = expr.sql(dialect=self.target_dialect, pretty=True)
+            # 保持Oracle方言，只格式化
+            optimized = expr.sql(dialect='oracle', pretty=True)
             optimized_statements.append(optimized)
 
         return '\n\n'.join(optimized_statements)
@@ -261,7 +261,7 @@ def main():
     # 创建高级优化器
     optimizer = AdvancedSQLOptimizer(
         output_dir=output_path,
-        target_dialect='mysql'  # 目标方言：mysql
+        target_dialect='oracle'  # 保持Oracle方言
     )
 
     # 批量优化
