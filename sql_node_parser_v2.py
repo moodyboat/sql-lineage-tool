@@ -37,12 +37,6 @@ class SQLPreprocessor:
         # 2. 处理模板变量
         self._handle_template_variables()
 
-        # 3. 处理注释
-        self._handle_comments()
-
-        # 4. 处理特殊函数
-        self._handle_special_functions()
-
         return self.preprocessed_sql, self.var_mappings
 
     def _handle_oracle_syntax(self):
@@ -57,60 +51,9 @@ class SQLPreprocessor:
         self.preprocessed_sql = self.preprocessed_sql.replace('（', '(')
         # 中文右括号 → 英文右括号
         self.preprocessed_sql = self.preprocessed_sql.replace('）', ')')
-        # 中文单引号 → 英文单引号
-        self.preprocessed_sql = self.preprocessed_sql.replace(''', "'")
-        self.preprocessed_sql = self.preprocessed_sql.replace(''', "'")
-
-        # 处理 TO_CHAR 函数 - 简化策略：直接移除格式参数
-        # to_char(expr, 'format') -> expr
-
-        # 处理 to_char(round(..., digits), 'format')
-        self.preprocessed_sql = re.sub(
-            r'to_char\(\s*\(round\([^)]+\)\s*,\s*\d+\)\s*,\s*[\'"][^\'"]*[\'"]\s*\)',
-            lambda m: m.group(0).split('),')[0].replace('to_char(', '').rstrip(),
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
-
-        # 处理 to_char(round(..., digits), 'format') - 不带外层括号
-        self.preprocessed_sql = re.sub(
-            r'to_char\(\s*round\([^)]+\)\s*,\s*\d+\s*,\s*[\'"][^\'"]*[\'"]\s*\)',
-            lambda m: 'round' + m.group(0).split('round')[1].rsplit(',', 1)[0] + ')',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
-
-        # 处理简单的 to_char(expr, 'format')
-        self.preprocessed_sql = re.sub(
-            r'to_char\(\s*([^,]+?)\s*,\s*[\'"][^\'"]*[\'"]\s*\)',
-            r'\1',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
-
-        # 处理 TO_DATE
-        self.preprocessed_sql = re.sub(
-            r'to_date\(([^,]+),\s*[\'"][^\'"]*[\'"]\)',
-            r'CAST(\1 AS DATE)',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
-
-        # 处理 NVL
-        self.preprocessed_sql = re.sub(
-            r'nvl\(([^,]+),\s*([^)]+)\)',
-            r'COALESCE(\1, \2)',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
-
-        # 处理 dual 表（替换为可以解析的形式）
-        self.preprocessed_sql = re.sub(
-            r'\bfrom\s+dual\b',
-            'FROM (SELECT 1 AS dummy)',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
+        # 中文单引号 → 英文单引号（使用Unicode避免Python语法冲突）
+        self.preprocessed_sql = self.preprocessed_sql.replace('\u2018', "'")  # 左单引号
+        self.preprocessed_sql = self.preprocessed_sql.replace('\u2019', "'")  # 右单引号
 
     def _handle_template_variables(self):
         """处理模板变量（如 <!JEDW!>）"""
@@ -141,34 +84,6 @@ class SQLPreprocessor:
             return value
 
         self.preprocessed_sql = re.sub(pattern, replace_var, self.preprocessed_sql)
-
-    def _handle_comments(self):
-        """处理SQL注释"""
-        # 移除单行注释
-        self.preprocessed_sql = re.sub(
-            r'--[^\n]*',
-            '',
-            self.preprocessed_sql
-        )
-
-        # 移除多行注释
-        self.preprocessed_sql = re.sub(
-            r'/\*.*?\*/',
-            '',
-            self.preprocessed_sql,
-            flags=re.DOTALL
-        )
-
-    def _handle_special_functions(self):
-        """处理特殊函数"""
-
-        # 处理 REPLACE 中的空格问题
-        self.preprocessed_sql = re.sub(
-            r'REPLACE\(([^,]+),\s*[\'"]\s*[\'"],\s*[\'"][^\'"]*[\'"]\)',
-            r'TRIM(\1)',
-            self.preprocessed_sql,
-            flags=re.IGNORECASE
-        )
 
 
 # ============================================================================
@@ -240,10 +155,28 @@ class SQLNodeParser:
             preprocessor = SQLPreprocessor(self.sql)
             preprocessed_sql, var_mappings = preprocessor.preprocess()
 
-            # 解析SQL
-            ast = parse(preprocessed_sql, dialect=self.dialect, read=self.dialect)
-            if not ast:
-                raise ValueError("SQL解析失败")
+            # 使用Oracle方言解析，然后转换为MySQL方言
+            # 这样可以自动处理Oracle特定的语法，如 || 字符串连接
+            try:
+                # 先用Oracle方言解析
+                ast = parse(preprocessed_sql, dialect='oracle', read='oracle')
+                if not ast:
+                    raise ValueError("SQL解析失败")
+
+                # 转换为MySQL方言的SQL
+                mysql_sql = ' '.join(expr.sql(dialect='mysql') for expr in ast)
+
+                # 再用MySQL方言解析最终的AST
+                ast = parse(mysql_sql, dialect=self.dialect, read=self.dialect)
+                if not ast:
+                    raise ValueError("SQL解析失败")
+
+            except Exception as oracle_error:
+                # 如果Oracle方言失败，回退到直接使用MySQL方言
+                print(f"Oracle方言解析失败，回退到MySQL方言: {oracle_error}")
+                ast = parse(preprocessed_sql, dialect=self.dialect, read=self.dialect)
+                if not ast:
+                    raise ValueError("SQL解析失败")
 
             # 创建ROOT节点
             root_node = Node(
