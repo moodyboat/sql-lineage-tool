@@ -65,12 +65,23 @@ class SQLPreprocessor:
             var_name = match.group(1)
             # 为每个变量生成一个替换值
             replacement_map = {
+                # 金额相关
                 'JEDW': '10000',  # 金额单位
+
+                # 时间日期相关
                 'KSSJ': '20240101',  # 开始时间
                 'JSSJ': '20241231',  # 结束时间
+                'KSRQ': '20241231',  # 开始日期
+                'JSRQ': '20241231',  # 结束日期 (使用最多，145次)
+                'RQ': '20241231',    # 日期
+
+                # 业务参数（保持为空或默认值）
                 'KHMC': '',  # 客户名称
                 'HTBH': '',  # 合同编号
                 'YWLX': '',  # 业务类型
+                'HTZT': '1', # 合同状态
+                'ZJLY': '1', # 资金来源
+                'BZ': '1',   # 币种
             }
 
             value = replacement_map.get(var_name, '1')
