@@ -76,12 +76,12 @@ class SQLPreprocessor:
                 'RQ': '20241231',    # 日期
 
                 # 业务参数（保持为空或默认值）
-                'KHMC': '',  # 客户名称
-                'HTBH': '',  # 合同编号
-                'YWLX': '',  # 业务类型
+                'KHMC': 'KHMC',  # 客户名称
+                'HTBH': 'HTBH',  # 合同编号
+                'YWLX': 'YWLX',  # 业务类型
                 'HTZT': '1', # 合同状态
                 'ZJLY': '1', # 资金来源
-                'BZ': '1',   # 币种
+                'BZ': '01',   # 币种
             }
 
             value = replacement_map.get(var_name, '1')
