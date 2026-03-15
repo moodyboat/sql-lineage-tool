@@ -48,6 +48,19 @@ class SQLPreprocessor:
     def _handle_oracle_syntax(self):
         """处理Oracle特殊语法"""
 
+        # 处理中文标点符号 - 替换为英文标点
+        # 中文逗号 → 英文逗号
+        self.preprocessed_sql = self.preprocessed_sql.replace('，', ',')
+        # 中文分号 → 英文分号（SQL语句分隔符）
+        self.preprocessed_sql = self.preprocessed_sql.replace('；', ';')
+        # 中文左括号 → 英文左括号
+        self.preprocessed_sql = self.preprocessed_sql.replace('（', '(')
+        # 中文右括号 → 英文右括号
+        self.preprocessed_sql = self.preprocessed_sql.replace('）', ')')
+        # 中文单引号 → 英文单引号
+        self.preprocessed_sql = self.preprocessed_sql.replace(''', "'")
+        self.preprocessed_sql = self.preprocessed_sql.replace(''', "'")
+
         # 处理 TO_CHAR 函数 - 简化策略：直接移除格式参数
         # to_char(expr, 'format') -> expr
 
@@ -89,71 +102,6 @@ class SQLPreprocessor:
             r'COALESCE(\1, \2)',
             self.preprocessed_sql,
             flags=re.IGNORECASE
-        )
-
-        # 处理 DECODE - 支持多分支
-        def decode_to_case(match):
-            decode_content = match.group(1)
-            # 按逗号分割，但要考虑括号和引号
-            parts = []
-            current = []
-            in_parens = 0
-            in_quotes = False
-            quote_char = None
-
-            for char in decode_content:
-                if char in ("'", '"') and (not in_quotes or quote_char == char):
-                    in_quotes = not in_quotes
-                    quote_char = char if in_quotes else None
-                    current.append(char)
-                elif in_quotes:
-                    current.append(char)
-                elif char == '(':
-                    in_parens += 1
-                    current.append(char)
-                elif char == ')':
-                    in_parens -= 1
-                    current.append(char)
-                elif char == ',' and in_parens == 0:
-                    parts.append(''.join(current).strip())
-                    current = []
-                else:
-                    current.append(char)
-
-            if current:
-                parts.append(''.join(current).strip())
-
-            if len(parts) < 4:
-                # 参数不够，不转换
-                return match.group(0)
-
-            expr = parts[0]
-            case_parts = []
-            i = 1
-            while i < len(parts) - 1:
-                if i + 1 < len(parts):
-                    search = parts[i]
-                    result = parts[i + 1]
-                    case_parts.append(f'WHEN {search} THEN {result}')
-                    i += 2
-                else:
-                    # 最后一个参数作为default
-                    default = parts[i]
-                    case_parts.append(f'ELSE {default}')
-                    break
-
-            if i < len(parts):
-                # 还有未处理的参数，最后一个作为default
-                if 'ELSE' not in case_parts[-1]:
-                    case_parts.append(f'ELSE {parts[-1]}')
-
-            return f'CASE {expr} {" ".join(case_parts)} END'
-
-        self.preprocessed_sql = re.sub(
-            r'decode\((.*?)\)',
-            decode_to_case,
-            self.preprocessed_sql,
-            flags=re.IGNORECASE | re.DOTALL
         )
 
         # 处理 dual 表（替换为可以解析的形式）
@@ -297,8 +245,6 @@ class SQLNodeParser:
             if not ast:
                 raise ValueError("SQL解析失败")
 
-            root_expr = ast[0] if ast else None
-
             # 创建ROOT节点
             root_node = Node(
                 id="ROOT",
@@ -312,8 +258,10 @@ class SQLNodeParser:
             )
             self.nodes["ROOT"] = root_node
 
-            # 开始解析
-            self._parse_expression(root_expr, root_node)
+            # 解析所有语句
+            for i, root_expr in enumerate(ast):
+                if root_expr:
+                    self._parse_expression(root_expr, root_node, context=f"STATEMENT_{i+1}")
 
             return self.nodes, self.relationships
 
@@ -420,8 +368,8 @@ class SQLNodeParser:
                 # 先处理WITH子句（CTE）
                 self._parse_with(with_clause, parent_node)
 
-        # 判断是否是UNION分支
-        is_union_branch = parent_node.type in ["ROOT", "UNION"] and context == "SELECT"
+        # 判断是否是UNION分支或ROOT节点的直接SELECT子节点
+        is_union_branch = parent_node.type in ["ROOT", "UNION"]
 
         if is_union_branch:
             # 创建BLK节点
