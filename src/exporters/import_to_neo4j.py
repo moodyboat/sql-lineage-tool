@@ -194,61 +194,76 @@ class Neo4jImporter:
         print("\n导入字段...")
         self.field_count = 0
 
-        for field in fields:
-            # 处理Field对象或字典
-            if hasattr(field, 'to_dict'):
-                field_data = field.to_dict()
-            else:
-                field_data = field
+        # 如果fields是字典，转换为列表
+        if isinstance(fields, dict):
+            field_list = list(fields.values())
+        else:
+            field_list = fields
 
-            # 将复杂对象转换为JSON字符串
-            import json
-            transformation = field_data.get('transformation', {})
-            if isinstance(transformation, dict):
-                transformation_str = json.dumps(transformation, ensure_ascii=False)
-            else:
-                transformation_str = str(transformation)
-
-            dependencies = field_data.get('dependencies', [])
-            if isinstance(dependencies, list):
-                dependencies_str = json.dumps(dependencies, ensure_ascii=False)
-            else:
-                dependencies_str = str(dependencies)
-
-            parent_node_id = field_data.get('parent_node_id', '')
-
-            # 新增：增强的元数据字段
-            metadata = field_data.get('metadata', {})
-
-            # 提取作用域系统相关信息
-            propagation_path = metadata.get('propagation_path', [])
-            if isinstance(propagation_path, list):
-                propagation_path_str = json.dumps(propagation_path, ensure_ascii=False)
-            else:
-                propagation_path_str = str(propagation_path)
-
-            is_inherited = metadata.get('is_inherited', False)
-            inheritance_depth = metadata.get('inheritance_depth', 0)
-
-            # 构建增强的Cypher查询
-            cypher = """
-            CREATE (f:Field {
-                id: $id,
-                name: $name,
-                table_name: $table_name,
-                column_name: $column_name,
-                field_type: $field_type,
-                transformation: $transformation,
-                dependencies: $dependencies,
-                parent_node_id: $parent_node_id,
-                propagation_path: $propagation_path,
-                is_inherited: $is_inherited,
-                inheritance_depth: $inheritance_depth,
-                scope_system: $scope_system
-            })
-            """
-
+        for field in field_list:
             try:
+                # 处理Field对象或字典
+                if hasattr(field, 'to_dict'):
+                    field_data = field.to_dict()
+                elif isinstance(field, dict):
+                    field_data = field
+                else:
+                    # 未知类型，跳过
+                    print(f"⚠️ 警告: 未知字段类型 {type(field)}，跳过")
+                    continue
+
+                # 确保field_data是字典
+                if not isinstance(field_data, dict):
+                    print(f"⚠️ 警告: field_data不是字典类型 {type(field_data)}，跳过")
+                    continue
+
+                # 将复杂对象转换为JSON字符串
+                import json
+                transformation = field_data.get('transformation', {})
+                if isinstance(transformation, dict):
+                    transformation_str = json.dumps(transformation, ensure_ascii=False)
+                else:
+                    transformation_str = str(transformation)
+
+                dependencies = field_data.get('dependencies', [])
+                if isinstance(dependencies, list):
+                    dependencies_str = json.dumps(dependencies, ensure_ascii=False)
+                else:
+                    dependencies_str = str(dependencies)
+
+                parent_node_id = field_data.get('parent_node_id', '')
+
+                # 新增：增强的元数据字段
+                metadata = field_data.get('metadata', {})
+
+                # 提取作用域系统相关信息
+                propagation_path = metadata.get('propagation_path', [])
+                if isinstance(propagation_path, list):
+                    propagation_path_str = json.dumps(propagation_path, ensure_ascii=False)
+                else:
+                    propagation_path_str = str(propagation_path)
+
+                is_inherited = metadata.get('is_inherited', False)
+                inheritance_depth = metadata.get('inheritance_depth', 0)
+
+                # 构建增强的Cypher查询
+                cypher = """
+                CREATE (f:Field {
+                    id: $id,
+                    name: $name,
+                    table_name: $table_name,
+                    column_name: $column_name,
+                    field_type: $field_type,
+                    transformation: $transformation,
+                    dependencies: $dependencies,
+                    parent_node_id: $parent_node_id,
+                    propagation_path: $propagation_path,
+                    is_inherited: $is_inherited,
+                    inheritance_depth: $inheritance_depth,
+                    scope_system: $scope_system
+                })
+                """
+
                 session.run(cypher, {
                     "id": field_data.get('id'),
                     "name": field_data.get('name'),
@@ -273,7 +288,9 @@ class Neo4jImporter:
                     print(f"  已导入 {self.field_count}/{len(fields)} 个字段")
 
             except Exception as e:
-                print(f"✗ 导入字段失败 {field_data.get('id', 'unknown')}: {e}")
+                print(f"✗ 导入字段失败: {e}")
+                import traceback
+                traceback.print_exc()
 
     def _create_has_field_relationship(self, session, field_id: str, parent_node_id: str):
         """创建字段与所属节点的HAS_FIELD关系"""

@@ -1,0 +1,5 @@
+﻿序号,关联类型,表名,表别名,关联条件
+1,FROM,LC00059999.JSPZFL,l,
+2,JOIN,LC00059999.JSPZK,k,k.jspzk_pznm = l.jspzfl_pznm
+3,JOIN,LC00059999.TRAN_FLOW,f,f.trac_id = k.jspzk_djbh
+4,JOIN,LC00059999.LSWBZD,bz,l.jspzfl_bz = bz.f_wbbh

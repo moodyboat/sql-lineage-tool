@@ -191,6 +191,32 @@ class MetadataManager:
         full_table_name = self._get_full_table_key(db_name, table_name)
         return self.tables.get(full_table_name)
 
+    def find_table(self, full_table_name: str) -> Optional[TableMetadata]:
+        """
+        通过完整表名查找表元数据（支持schema.table格式）
+
+        Args:
+            full_table_name: 完整表名，可能是"table"或"schema.table"格式
+
+        Returns:
+            表元数据，如果不存在返回None
+        """
+        # 尝试解析schema.table格式
+        if '.' in full_table_name:
+            parts = full_table_name.split('.')
+            if len(parts) == 2:
+                schema, table = parts
+                return self.get_table(schema, table)
+
+        # 遍历所有数据库查找表
+        table_name_upper = full_table_name.upper()
+        for db_key, table_meta in self.tables.items():
+            if table_meta.table_name.upper() == table_name_upper:
+                return table_meta
+
+        # 尝试作为完整key查找
+        return self.tables.get(full_table_name.upper())
+
     def has_table(self, db_name: str, table_name: str) -> bool:
         """
         检查表是否存在（大小写不敏感）

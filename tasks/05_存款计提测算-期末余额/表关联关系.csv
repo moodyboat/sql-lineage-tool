@@ -1,0 +1,3 @@
+﻿序号,关联类型,表名,表别名,关联条件
+1,FROM,LC00059999.ST_PROTOCOL,p,
+2,JOIN,LC00059999.ST_DEPOSIT_DRAW,d,p.protocol_id = d.proto_id

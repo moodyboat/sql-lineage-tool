@@ -100,7 +100,7 @@ Unified entry point with command-line interface.
 python main.py <sql_file> [options]
 
 Options:
-  --dialect        SQL dialect (default: mysql)
+  --dialect        SQL dialect (default: oracle)
   --output         Output JSON file path
   --export-neo4j   Export to Neo4j
   --no-metadata    Disable metadata enhancement
@@ -175,7 +175,7 @@ analyzer = EnhancedFieldLineageAnalyzer(
     ]
 )
 
-result = analyzer.analyze_sql(sql_content, dialect='mysql')
+result = analyzer.analyze_sql(sql_content, dialect='oracle')
 parser = result['parser']
 fields = result['fields']
 field_relationships = result['field_relationships']
@@ -294,7 +294,7 @@ import sqlglot
 from sqlglot import exp
 
 # Parse SQL to AST
-ast = sqlglot.parse_one(sql, dialect='mysql')
+ast = sqlglot.parse_one(sql, dialect='oracle')
 
 # Extract columns from expressions
 for column in expr.find_all(exp.Column):

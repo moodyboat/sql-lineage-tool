@@ -93,6 +93,26 @@ class SQLPreprocessor:
         self.preprocessed_sql = self.preprocessed_sql.replace('\u2018', "'")  # 左单引号
         self.preprocessed_sql = self.preprocessed_sql.replace('\u2019', "'")  # 右单引号
 
+        # 处理包含特殊字符的列别名 - 给没有双引号的别名加双引号
+        # 匹配模式：AS 别名(特殊字符) 或 AS 别名% 等
+        import re
+
+        # 匹配 AS 后面跟的包含特殊字符但没用双引号括起来的别名
+        # 特殊字符包括：括号()、百分号%、逗号,、分号;
+        # 优先匹配已有双引号的，避免重复处理
+        def quote_alias_with_special_chars(match):
+            alias = match.group(1)
+            # 如果已经被双引号括起来，跳过
+            if alias.startswith('"') and alias.endswith('"'):
+                return match.group(0)
+            # 给别名加上双引号
+            return f' AS "{alias}"{match.group(2)}'
+
+        # 匹配 AS 别名(%) 或 AS 别名(中文) 等包含括号的别名
+        # 不匹配已经有双引号的
+        pattern = r'\bAS\s+([a-zA-Z_\u4e00-\u9fff][a-zA-Z0-9_\u4e00-\u9fff]*\([^)]*\))(\s*,|\s*$|\s+(?:FROM|WHERE|GROUP|ORDER|HAVING|))'
+        self.preprocessed_sql = re.sub(pattern, quote_alias_with_special_chars, self.preprocessed_sql, flags=re.IGNORECASE)
+
     def _handle_template_variables(self):
         """处理模板变量（如 <!JEDW!>）"""
 
@@ -141,11 +161,10 @@ class SQLPreprocessor:
         保留：字符串字面量、注释、数字
         """
         try:
-            # 使用sqlglot解析SQL为AST（保留注释）
+            # 使用sqlglot解析SQL为AST
             parsed = sqlglot.parse_one(
                 self.preprocessed_sql,
-                dialect='mysql',
-                comments=True  # 保留注释
+                dialect='oracle'
             )
 
             # 遍历AST，转换所有标识符为大写
@@ -198,7 +217,7 @@ class SQLPreprocessor:
 
             # 重新生成SQL（保留注释和格式）
             self.preprocessed_sql = parsed.sql(
-                dialect='mysql',
+                dialect='oracle',
                 comments=True,
                 pretty=True  # 美化格式
             )
@@ -308,7 +327,7 @@ class FieldRelationship:
 class SQLNodeParser:
     """SQL节点解析器"""
 
-    def __init__(self, sql: str, dialect: str = "mysql", use_scope_system: bool = True):
+    def __init__(self, sql: str, dialect: str = "oracle", use_scope_system: bool = True, metadata_manager=None):
         self.sql = sql
         self.dialect = dialect
         self.nodes: Dict[str, Node] = {}
@@ -320,6 +339,9 @@ class SQLNodeParser:
         self.fields: Dict[str, Field] = {}
         self.field_relationships: List[FieldRelationship] = []
         self.field_counter = defaultdict(int)
+
+        # 元数据管理器（用于物理表字段填充）
+        self.metadata_manager = metadata_manager
 
         # 作用域系统（新增）
         self.use_scope_system = use_scope_system and check_scope_system_available()
@@ -349,28 +371,11 @@ class SQLNodeParser:
             preprocessor = SQLPreprocessor(self.sql)
             preprocessed_sql, var_mappings = preprocessor.preprocess()
 
-            # 使用Oracle方言解析，然后转换为MySQL方言
-            # 这样可以自动处理Oracle特定的语法，如 || 字符串连接
-            try:
-                # 先用Oracle方言解析
-                ast = parse(preprocessed_sql, dialect='oracle', read='oracle')
-                if not ast:
-                    raise ValueError("SQL解析失败")
-
-                # 转换为MySQL方言的SQL
-                mysql_sql = ' '.join(expr.sql(dialect='mysql') for expr in ast)
-
-                # 再用MySQL方言解析最终的AST
-                ast = parse(mysql_sql, dialect=self.dialect, read=self.dialect)
-                if not ast:
-                    raise ValueError("SQL解析失败")
-
-            except Exception as oracle_error:
-                # 如果Oracle方言失败，回退到直接使用MySQL方言
-                print(f"Oracle方言解析失败，回退到MySQL方言: {oracle_error}")
-                ast = parse(preprocessed_sql, dialect=self.dialect, read=self.dialect)
-                if not ast:
-                    raise ValueError("SQL解析失败")
+            # 直接使用Oracle方言解析（sqlglot完全支持Oracle语法）
+            # 不需要进行方言转换
+            ast = parse(preprocessed_sql, dialect='oracle', read='oracle')
+            if not ast:
+                raise ValueError("SQL解析失败")
 
             # 创建ROOT节点
             root_node = Node(
@@ -534,30 +539,32 @@ class SQLNodeParser:
         else:
             current_parent = parent_node
 
-        # 解析FROM子句，建立表别名映射
+        # 【调整】先遍历子查询和表，建立节点和关系
+        # 这样在处理SELECT *时，已经可以找到子查询的CONTAINS关系
+        for subquery in select_expr.find_all(exp.Subquery):
+            self._parse_subquery(subquery, current_parent, context)
+
+        for table in select_expr.find_all(exp.Table):
+            self._parse_table(table, current_parent)
+
+        # 解析FROM子句，建立表别名映射（在子查询节点创建之后）
         if self.use_scope_system:
             # 使用新的作用域系统
             self._parse_from_clause_with_scope(select_expr, current_parent)
             table_aliases = {}  # 作用域系统会管理别名
         else:
-            # 使用旧方法
+            # 使用旧方法（现在可以找到子查询节点了）
             table_aliases = self._parse_from_clause(select_expr, current_parent)
             current_parent.metadata['table_aliases'] = table_aliases
 
         # 提取字段信息（字段级血缘分析）
+        # 现在子查询已经解析完成，可以正确展开SELECT *
         if self.use_scope_system:
             # 使用新的作用域系统
             self._parse_select_clause_with_scope(select_expr, current_parent)
         else:
             # 使用旧方法
             self._extract_fields(select_expr, current_parent, table_aliases)
-
-        # 遍历SELECT中的所有子查询和表
-        for subquery in select_expr.find_all(exp.Subquery):
-            self._parse_subquery(subquery, current_parent, context)
-
-        for table in select_expr.find_all(exp.Table):
-            self._parse_table(table, current_parent)
 
     def _parse_union(self, union_expr: exp.Union, parent_node: Node):
         """解析UNION"""
@@ -666,9 +673,78 @@ class SQLNodeParser:
             self.nodes[table_id] = table_node
             self.table_nodes[full_name] = table_id
 
+            # 如果有元数据管理器，从元数据中加载该表的字段
+            if self.metadata_manager:
+                self._populate_table_fields_from_metadata(table_node)
+
         # 创建引用关系
         self._add_relationship(parent_node.id, table_id, "REFERENCES",
                               metadata={"alias": alias, "ref_type": "TABLE"})
+
+    def _populate_table_fields_from_metadata(self, table_node: Node):
+        """
+        从元数据中填充物理表的字段信息
+
+        Args:
+            table_node: 物理表节点
+        """
+        if not self.metadata_manager:
+            return
+
+        # 获取表名
+        full_table_name = table_node.name
+
+        # 尝试从元数据中获取该表的信息
+        # 元数据管理器使用 大写.大写 格式作为键
+        normalized_name = full_table_name.upper()
+
+        # 尝试多种格式匹配
+        table_metadata = None
+
+        # 1. 尝试直接匹配（SCHEMA.TABLE）
+        if normalized_name in self.metadata_manager.tables:
+            table_metadata = self.metadata_manager.tables[normalized_name]
+        else:
+            # 2. 尝试在 name_mapping 中查找
+            if full_table_name in self.metadata_manager.name_mapping:
+                normalized_key = self.metadata_manager.name_mapping[full_table_name]
+                table_metadata = self.metadata_manager.tables.get(normalized_key)
+
+        # 如果找到了表元数据
+        if table_metadata:
+            # 获取所有列名
+            column_names = table_metadata.get_all_column_names()
+
+            # 为每个列创建 Field 对象
+            for column_name in column_names:
+                column_metadata = table_metadata.get_column(column_name)
+
+                # 生成字段 ID
+                field_id = self._generate_field_id(table_node.id, column_name, len(table_node.output_fields))
+
+                # 创建 Field 对象
+                field = Field(
+                    id=field_id,
+                    name=column_name,  # 输出字段名（没有AS，就是原字段名）
+                    parent_node_id=table_node.id,
+                    column_name=column_name,  # 原始字段名
+                    table_name=full_table_name,
+                    field_type='COLUMN',
+                    transformation={},  # 物理表字段无转换
+                    dependencies=[],  # 物理表字段无依赖
+                    metadata={
+                        'data_type': column_metadata.data_type if column_metadata else '',
+                        'column_name_cn': column_metadata.column_name_cn if column_metadata else '',
+                        'is_primary_key': column_metadata.is_primary_key if column_metadata else '',
+                        'from_metadata': True  # 标记来自元数据
+                    }
+                )
+
+                # 添加到 fields 字典
+                self.fields[field_id] = field
+
+                # 添加到节点的 output_fields（输出字段名）
+                table_node.output_fields.append(column_name)
 
     def _find_cte_node_id(self, cte_name: str) -> Optional[str]:
         """根据CTE名称查找CTE节点ID"""
@@ -702,7 +778,29 @@ class SQLNodeParser:
         if not hasattr(select_stmt, 'expressions'):
             return
 
-        for idx, projection in enumerate(select_stmt.expressions):
+        # 【新增】处理SELECT * - 利用元数据和底层节点展开字段
+        # 预先展开所有Star projection
+        all_projections = []
+        for projection in select_stmt.expressions:
+            # 检测是否是SELECT *（包括t.*这样的形式）
+            is_star = False
+            if isinstance(projection, exp.Star):
+                is_star = True
+            elif isinstance(projection, exp.Column) and isinstance(projection.this, exp.Star):
+                is_star = True
+
+            if is_star:
+                # 展开SELECT *
+                expanded_fields = self._expand_star_projection(projection, parent_node, table_aliases)
+                all_projections.extend(expanded_fields)
+            else:
+                all_projections.append(projection)
+
+        # 使用展开后的projection列表
+        effective_projections = all_projections
+
+        # 处理所有projection
+        for idx, projection in enumerate(effective_projections):
             # 获取字段别名
             alias = None
             if isinstance(projection, exp.Alias):
@@ -728,11 +826,26 @@ class SQLNodeParser:
             final_table_name = field_info.get('table_name') or inferred_table
 
             # 【关键修复】column_name 设置逻辑：
-            # 1. 对于计算字段（FUNCTION, CASE, AGGREGATION, ARITHMETIC），column_name 应该是字段别名（field_name）
-            # 2. 对于简单列引用（COLUMN），使用 field_info 中的 column_name
-            # 3. 对于其他类型，如果没有 column_name，使用 field_name
+            # 1. 对于有别名（alias != 字段原始名）的表达式，column_name 应该是别名
+            # 2. 对于计算字段（FUNCTION, CASE, AGGREGATION, ARITHMETIC），column_name 应该是字段别名（field_name）
+            # 3. 对于简单列引用（COLUMN），如果没有别名，使用 field_info 中的 column_name
+            # 4. 对于其他类型，如果没有 column_name，使用 field_name
 
-            if field_info.get('field_type') in ['FUNCTION', 'CASE', 'AGGREGATION', 'ARITHMETIC']:
+            # 判断是否有显式别名（projection.is_alias 或 alias != 原始列名）
+            has_explicit_alias = False
+            original_column_name = field_info.get('column_name', '')
+
+            if isinstance(projection, exp.Alias):
+                # 有显式 AS 别名
+                has_explicit_alias = True
+            elif isinstance(projection, exp.Column) and alias and alias != original_column_name:
+                # 隐式别名（别名与原列名不同）
+                has_explicit_alias = True
+
+            if has_explicit_alias:
+                # 有别名：使用别名作为 column_name
+                final_column_name = field_name
+            elif field_info.get('field_type') in ['FUNCTION', 'CASE', 'AGGREGATION', 'ARITHMETIC']:
                 # 计算字段使用字段别名作为 column_name
                 final_column_name = field_name
             else:
@@ -777,6 +890,213 @@ class SQLNodeParser:
                     'subquery_expr': actual_expr,
                     'outer_node': parent_node
                 })
+
+    def _expand_star_projection(self, star_expr, parent_node: Node,
+                                table_aliases: Dict[str, str]) -> list:
+        """
+        展开SELECT *为具体字段
+
+        利用元数据将SELECT *或table.*展开为具体字段列表
+        支持从底层节点（子查询、CTE）继承字段
+
+        Args:
+            star_expr: Star表达式（可能是*或table.*）
+            parent_node: 父节点
+            table_aliases: 表别名映射
+
+        Returns:
+            展开后的projection列表
+        """
+        # 判断是单纯的*还是table.*
+        is_table_star = False
+        star_table = None
+
+        if isinstance(star_expr, exp.Column):
+            # table.* 的情况
+            if isinstance(star_expr.this, exp.Star):
+                is_table_star = True
+                star_table = str(star_expr.table) if star_expr.table else None
+        elif isinstance(star_expr, exp.Star):
+            # 单纯的 *
+            is_table_star = False
+
+        expanded_projections = []
+        tables_to_expand = []
+
+        if is_table_star and star_table:
+            # t.* 的情况：只展开指定的表
+            # 首先检查是否是子查询别名
+            subquery_node = None
+            for rel in self.relationships:
+                if rel.source_id == parent_node.id and rel.type == "CONTAINS":
+                    target_node = self.nodes.get(rel.target_id)
+                    if target_node and target_node.type in ["CT", "SQ"] and target_node.name == star_table:
+                        subquery_node = target_node
+                        break
+
+            if subquery_node:
+                # 从子查询节点继承字段
+                for field_id in subquery_node.output_fields:
+                    field = self.fields.get(field_id)
+                    if field:
+                        # 创建引用子查询字段的projection
+                        column_expr = exp.Column(
+                            this=exp.Identifier(this=field.name),
+                            table=exp.Identifier(this=star_table)
+                        )
+                        expanded_projections.append(column_expr)
+            else:
+                # 物理表：使用别名映射（兼容新旧格式）
+                alias_info = table_aliases.get(star_table, star_table)
+                # 提取实际的表名（兼容新旧格式）
+                if isinstance(alias_info, dict):
+                    physical_table = alias_info.get('table_name', star_table)
+                else:
+                    physical_table = alias_info
+
+                if self.metadata_manager:
+                    tables_to_expand.append((star_table, physical_table))
+        else:
+            # * 的情况：展开所有引用的内容
+            # 【优化】检查FROM子句的直接来源（不包括子查询内部引用的表）
+            direct_from_count = 0
+            has_subquery_in_from = False
+            from_clause_subquery = None
+
+            # 首先检查table_aliases（如果存在）
+            # 注意：使用作用域系统时，table_aliases可能不存储在metadata中
+            table_aliases_dict = parent_node.metadata.get('table_aliases')
+
+            if table_aliases_dict is not None:
+                direct_from_count = len(table_aliases_dict)
+            elif self.use_scope_system and self.alias_manager:
+                # 从作用域系统获取别名
+                scope = self.alias_manager.scope_manager.get_scope(parent_node.id)
+                if scope and scope.table_aliases:
+                    direct_from_count = len(scope.table_aliases)
+            else:
+                # 【优化】通过检查子查询的output_fields数量来判断哪个是FROM子查询
+                # 通常FROM子句中的子查询会有最多的输出字段
+                # 找到所有CONTAINS的子查询
+                subquery_candidates = []
+                for rel in self.relationships:
+                    if rel.source_id == parent_node.id and rel.type == "CONTAINS":
+                        target_node = self.nodes.get(rel.target_id)
+                        if target_node and target_node.type in ["CT", "SQ"]:
+                            output_field_count = len(target_node.output_fields)
+                            subquery_candidates.append((target_node, output_field_count))
+
+                # 按output_fields数量排序，选择最多的作为FROM子查询
+                if subquery_candidates:
+                    subquery_candidates.sort(key=lambda x: x[1], reverse=True)
+                    from_clause_subquery = subquery_candidates[0][0]
+                    has_subquery_in_from = True
+                    direct_from_count = 1
+
+                # 如果没有找到子查询，使用原来的逻辑
+                if not has_subquery_in_from:
+                    subquery_names = set()
+                    for rel in self.relationships:
+                        if rel.source_id == parent_node.id and rel.type == "CONTAINS":
+                            target_node = self.nodes.get(rel.target_id)
+                            if target_node and target_node.type in ["CT", "SQ"]:
+                                subquery_names.add(target_node.name)
+
+                    # 同时检查是否有REFERENCES到非DUAL的物理表（有别名）
+                    has_physical_table_refs = False
+                    for rel in self.relationships:
+                        if rel.source_id == parent_node.id and rel.type == "REFERENCES":
+                            target_node = self.nodes.get(rel.target_id)
+                            if target_node and target_node.type in ["TB", "VW"] and target_node.name != 'DUAL':
+                                # 检查是否有别名（有别名说明是直接引用）
+                                if rel.metadata.get('alias'):
+                                    has_physical_table_refs = True
+                                    break
+
+                    direct_from_count = len(subquery_names)
+                    has_subquery_in_from = (len(subquery_names) == 1 and not has_physical_table_refs)
+
+            # 如果FROM子句只有一个子查询（通过名字判断或AST分析），只从子查询继承字段
+            if has_subquery_in_from or (direct_from_count == 1):
+                # 找到那个子查询
+                if from_clause_subquery:
+                    # 使用AST分析找到的直接FROM子查询
+                    for field_id in from_clause_subquery.output_fields:
+                        field = self.fields.get(field_id)
+                        if field:
+                            # 创建引用字段的projection
+                            column_expr = exp.Column(
+                                this=exp.Identifier(this=field.name)
+                            )
+                            expanded_projections.append(column_expr)
+                else:
+                    # Fallback：找到第一个CONTAINS的子查询
+                    for rel in self.relationships:
+                        if rel.source_id == parent_node.id and rel.type == "CONTAINS":
+                            target_node = self.nodes.get(rel.target_id)
+                            if target_node and target_node.type in ["CT", "SQ"]:
+                                for field_id in target_node.output_fields:
+                                    field = self.fields.get(field_id)
+                                    if field:
+                                        # 创建引用字段的projection
+                                        column_expr = exp.Column(
+                                            this=exp.Identifier(this=field.name)
+                                        )
+                                        expanded_projections.append(column_expr)
+                                break
+            else:
+                # 1. 从CONTAINS关系（子查询、CTE）继承字段
+                for rel in self.relationships:
+                    if rel.source_id == parent_node.id and rel.type == "CONTAINS":
+                        target_node = self.nodes.get(rel.target_id)
+                        if target_node and target_node.type in ["CT", "SQ"]:
+                            # 从子查询/CTE继承字段
+                            for field_id in target_node.output_fields:
+                                field = self.fields.get(field_id)
+                                if field:
+                                    # 创建引用字段的projection
+                                    column_expr = exp.Column(
+                                        this=exp.Identifier(this=field.name)
+                                    )
+                                    expanded_projections.append(column_expr)
+
+                # 2. 从REFERENCES关系（物理表）展开字段
+                if self.metadata_manager:
+                    for rel in self.relationships:
+                        if rel.source_id == parent_node.id and rel.type == "REFERENCES":
+                            target_node = self.nodes.get(rel.target_id)
+                            if target_node and target_node.type in ["TB", "VW"]:
+                                alias = rel.metadata.get('alias', target_node.name)
+                                tables_to_expand.append((alias, target_node.name))
+
+        # 为物理表展开字段（使用元数据）
+        for table_alias, physical_table_name in tables_to_expand:
+            table_metadata = self.metadata_manager.find_table(physical_table_name)
+
+            if table_metadata:
+                # 遍历表的所有列
+                for column_name in table_metadata.get_all_column_names():
+                    # 创建Column表达式：table.column
+                    column_expr = exp.Column(
+                        this=exp.Identifier(this=column_name),
+                        table=exp.Identifier(this=table_alias) if table_alias else None
+                    )
+
+                    # 为展开的字段添加别名（如果是多个表的情况）
+                    if len(tables_to_expand) > 1:
+                        alias_name = f"{table_alias}_{column_name}"
+                        column_expr = exp.Alias(this=column_expr, alias=alias_name)
+
+                    expanded_projections.append(column_expr)
+            else:
+                # 元数据中找不到该表，保持原样（fallback到*）
+                return [star_expr]
+
+        # 如果没有展开任何字段，返回原star表达式
+        if not expanded_projections:
+            return [star_expr]
+
+        return expanded_projections
 
     def _handle_scalar_field_field(self, outer_field: Field, subquery_expr,
                                    outer_node: Node, table_aliases: Dict[str, str]):
@@ -998,8 +1318,13 @@ class SQLNodeParser:
             'branches': branches
         }
 
-    def _parse_from_clause(self, select_expr: exp.Select, parent_node: Node) -> Dict[str, str]:
-        """解析FROM子句，建立表别名映射"""
+    def _parse_from_clause(self, select_expr: exp.Select, parent_node: Node) -> Dict[str, any]:
+        """
+        解析FROM子句，建立表别名映射（改进版 - 支持CTE和子查询别名映射）
+
+        相邻引用关系：只处理当前节点直接引用的表和CTE
+        返回格式：{alias: {table_name: str, node_id: str | None, is_cte: bool, cte_name: str | None}}
+        """
         table_aliases = {}
 
         # 查找FROM子句
@@ -1013,15 +1338,37 @@ class SQLNodeParser:
             alias = table.alias or table_name
 
             if alias and table_name:
-                table_aliases[alias] = table_name
-
                 # 检查是否是CTE引用
                 if table_name.upper() in self.cte_names:
                     cte_node_id = self._find_cte_node_id(table_name)
                     if cte_node_id:
+                        # 扩展别名映射格式：支持CTE节点ID
+                        table_aliases[alias] = {
+                            'table_name': table_name,
+                            'node_id': cte_node_id,
+                            'is_cte': True,
+                            'cte_name': table_name
+                        }
+
+                        # 记录CTE别名关系（用于后续查找）
                         self._add_relationship(parent_node.id, cte_node_id, "REFERENCES",
                                               metadata={"alias": alias, "ref_type": "CTE"})
-                    return
+                    else:
+                        # CTE节点未找到，按物理表处理
+                        table_aliases[alias] = {
+                            'table_name': table_name,
+                            'node_id': None,
+                            'is_cte': False,
+                            'cte_name': None
+                        }
+                else:
+                    # 物理表或视图
+                    table_aliases[alias] = {
+                        'table_name': table_name,
+                        'node_id': None,
+                        'is_cte': False,
+                        'cte_name': None
+                    }
 
         # 处理JOIN关系（从Select.joins中获取）
         if hasattr(select_expr, 'args') and 'joins' in select_expr.args:
@@ -1036,7 +1383,53 @@ class SQLNodeParser:
                         alias = table.alias or table_name
 
                         if alias and table_name:
-                            table_aliases[alias] = table_name
+                            # 检查是否是CTE引用
+                            if table_name.upper() in self.cte_names:
+                                cte_node_id = self._find_cte_node_id(table_name)
+                                if cte_node_id:
+                                    # 扩展别名映射格式：支持CTE节点ID
+                                    table_aliases[alias] = {
+                                        'table_name': table_name,
+                                        'node_id': cte_node_id,
+                                        'is_cte': True,
+                                        'cte_name': table_name
+                                    }
+
+                                    # 记录CTE别名关系（用于后续查找）
+                                    self._add_relationship(parent_node.id, cte_node_id, "REFERENCES",
+                                                          metadata={"alias": alias, "ref_type": "CTE"})
+                                else:
+                                    # CTE节点未找到，按物理表处理
+                                    table_aliases[alias] = {
+                                        'table_name': table_name,
+                                        'node_id': None,
+                                        'is_cte': False,
+                                        'cte_name': None
+                                    }
+                            else:
+                                # 物理表或视图
+                                table_aliases[alias] = {
+                                    'table_name': table_name,
+                                    'node_id': None,
+                                    'is_cte': False,
+                                    'cte_name': None
+                                }
+
+        # 遍历FROM子句中的子查询（JOIN子查询等）
+        # 注意：这里需要与解析节点时创建的子查询节点建立关联
+        # 子查询节点应该在CONTAINS关系中
+        for rel in self.relationships:
+            if rel.source_id == parent_node.id and rel.type == 'CONTAINS':
+                target_node = self.nodes.get(rel.target_id)
+                if target_node and target_node.type == 'SQ' and target_node.alias:
+                    # 添加子查询别名映射
+                    table_aliases[target_node.alias] = {
+                        'table_name': target_node.alias,  # 子查询别名为表名
+                        'node_id': rel.target_id,
+                        'is_subquery': True,
+                        'is_cte': False,
+                        'cte_name': None
+                    }
 
         return table_aliases
 
@@ -1047,8 +1440,8 @@ class SQLNodeParser:
         return f"{parent_node.id}_SUBQUERY_{id(subquery)}"
 
     def _infer_field_source(self, expr: exp.Expression, field_name: str,
-                           table_aliases: Dict[str, str], parent_node: Node) -> str:
-        """推断字段来源表"""
+                           table_aliases: Dict[str, any], parent_node: Node) -> str:
+        """推断字段来源表（改进版 - 支持新旧别名格式）"""
         # 1. 检查表达式是否有显式表前缀
         if isinstance(expr, exp.Column):
             table_name = expr.table or ''
@@ -1056,8 +1449,23 @@ class SQLNodeParser:
 
             # 如果有表前缀，直接使用
             if table_name:
-                # 通过表别名映射找到实际表名
-                actual_table = table_aliases.get(table_name, table_name)
+                # 通过表别名映射找到实际表名（兼容新旧格式）
+                actual_table = table_name
+                is_subquery_ref = False
+
+                if table_name in table_aliases:
+                    alias_info = table_aliases[table_name]
+                    if isinstance(alias_info, dict):
+                        actual_table = alias_info.get('table_name', table_name)
+                        # 【新增】检查是否是子查询引用
+                        is_subquery_ref = alias_info.get('is_subquery', False)
+                    else:
+                        # 兼容旧格式（字符串）
+                        actual_table = alias_info
+
+                # 【新增】如果是子查询引用，返回子查询别名（用于后续处理）
+                if is_subquery_ref:
+                    return actual_table
 
                 # 【新增】如果实际表是CTE，返回CTE名称
                 if actual_table.upper() in self.cte_names:
@@ -1069,11 +1477,17 @@ class SQLNodeParser:
 
             # 【新增】对于子查询，如果只有一个表，使用那个表
             if parent_node.type == "SQ":
-                # 获取子查询的FROM子句中的表
+                # 获取子查询的FROM子句中的表（兼容新旧格式）
                 from_tables = []
-                for alias, actual_table in table_aliases.items():
-                    if not actual_table.startswith('SUBQUERY:'):
-                        from_tables.append(actual_table)
+                for alias, alias_info in table_aliases.items():
+                    if isinstance(alias_info, dict):
+                        table_name = alias_info.get('table_name', alias)
+                        if not table_name.startswith('SUBQUERY:'):
+                            from_tables.append(table_name)
+                    else:
+                        # 兼容旧格式（字符串）
+                        if not alias_info.startswith('SUBQUERY:'):
+                            from_tables.append(alias_info)
 
                 # 如果只有一个物理表，使用它
                 if len(from_tables) == 1:
@@ -1081,11 +1495,17 @@ class SQLNodeParser:
 
             # 优先级1: 检查字段名是否存在于CTE中
             if parent_node.type == "CT":
-                # CTE字段优先推断为FROM子句的表
-                for alias, actual_table in table_aliases.items():
-                    # 跳过子查询别名
-                    if not actual_table.startswith('SUBQUERY:'):
-                        return actual_table
+                # CTE字段优先推断为FROM子句的表（兼容新旧格式）
+                for alias, alias_info in table_aliases.items():
+                    if isinstance(alias_info, dict):
+                        actual_table = alias_info.get('table_name', alias)
+                        # 跳过子查询别名
+                        if not actual_table.startswith('SUBQUERY:'):
+                            return actual_table
+                    else:
+                        # 兼容旧格式（字符串）
+                        if not alias_info.startswith('SUBQUERY:'):
+                            return alias_info
 
             # 优先级2: 检查节点引用的CTE
             cte_references = [rel.target_id for rel in self.relationships
@@ -1097,13 +1517,18 @@ class SQLNodeParser:
                 # 检查CTE中是否有这个字段
                 for cte_id in cte_references:
                     cte_node = self.nodes.get(cte_id)
-                    if cte_node:
-                        # 检查CTE的表别名映射
+                    if cte_node and cte_node.metadata:
+                        # 检查CTE的表别名映射（兼容新旧格式）
                         cte_aliases = cte_node.metadata.get('table_aliases', {})
-                        # 如果CTE只引用一个物理表，字段来自该表
-                        if len(cte_aliases) == 1:
-                            actual_table = list(cte_aliases.values())[0]
-                            if not actual_table.startswith('SUBQUERY:'):
+                        if cte_aliases and len(cte_aliases) == 1:
+                            # 获取唯一一个表名（兼容新旧格式）
+                            alias_info = list(cte_aliases.values())[0]
+                            if isinstance(alias_info, dict):
+                                actual_table = alias_info.get('table_name', '')
+                            else:
+                                actual_table = alias_info
+
+                            if actual_table and not actual_table.startswith('SUBQUERY:'):
                                 return actual_table
 
             # 新增：检查节点是否引用了CTE（用于没有表前缀的字段）
@@ -1116,7 +1541,7 @@ class SQLNodeParser:
             if cte_refs and len(cte_refs) == 1:
                 # 如果节点只引用一个CTE，字段来自该CTE
                 cte_node = self.nodes.get(cte_refs[0])
-                if cte_node:
+                if cte_node and cte_node.metadata:
                     cte_name = cte_node.metadata.get('cte_name', '')
                     if cte_name:
                         return cte_name
@@ -1131,11 +1556,20 @@ class SQLNodeParser:
                         # 这里简化处理，返回表名
                         return target_node.name
 
-        # 2. 对于函数或复杂表达式，查找包含的列引用
+        # 2. 对于函数或复杂表达式，查找包含的列引用（兼容新旧格式）
         tables_in_expr = set()
         for col in expr.find_all(exp.Column):
             if col.table:
-                actual_table = table_aliases.get(col.table, col.table)
+                actual_table = col.table
+                # 通过表别名映射找到实际表名（兼容新旧格式）
+                if col.table in table_aliases:
+                    alias_info = table_aliases[col.table]
+                    if isinstance(alias_info, dict):
+                        actual_table = alias_info.get('table_name', col.table)
+                    else:
+                        # 兼容旧格式（字符串）
+                        actual_table = alias_info
+
                 if actual_table:
                     tables_in_expr.add(actual_table)
 
@@ -1252,7 +1686,11 @@ class SQLNodeParser:
     def _extract_field_dependencies_from_expression(self, expr_sql: str,
                                                      parent_node_id: str,
                                                      exclude_field_id: str = None) -> List[str]:
-        """从表达式SQL中提取依赖的字段ID"""
+        """
+        从表达式SQL中提取依赖的字段ID（改进版 - 支持别名解析）
+
+        相邻引用关系：只在相邻作用域内查找字段
+        """
         dependencies = []
 
         try:
@@ -1276,15 +1714,34 @@ class SQLNodeParser:
 
                 # 情况1：有表前缀的字段
                 if table_name:
-                    # 解析表别名
+                    # 解析表别名（兼容新旧格式）
                     actual_table_name = table_name
-                    if table_name in table_aliases:
-                        actual_table_name = table_aliases[table_name]
+                    target_node_id = None
+                    is_cte_ref = False
 
-                    # 尝试找匹配的字段（同节点或CTE节点）
-                    matching_field_id = self._find_field_by_reference(table_name, column_name, parent_node_id)
+                    if table_name in table_aliases:
+                        alias_info = table_aliases[table_name]
+                        if isinstance(alias_info, dict):
+                            actual_table_name = alias_info.get('table_name', table_name)
+                            target_node_id = alias_info.get('node_id')
+                            is_cte_ref = alias_info.get('is_cte', False)
+                        else:
+                            # 兼容旧格式（字符串）
+                            actual_table_name = alias_info
+
+                    # 如果有目标节点ID（CTE或子查询），在对应节点中查找
+                    if target_node_id:
+                        for field_id, field in self.fields.items():
+                            if (field.parent_node_id == target_node_id and
+                                field.column_name.upper() == column_name.upper()):
+                                if field_id not in dependencies and field_id != exclude_field_id:
+                                    dependencies.append(field_id)
+                                continue
+
+                    # 尝试找匹配的字段（使用原表名，让_find_field_by_reference处理别名解析）
+                    matching_field_id = self._find_field_by_reference(table_name, column_name, parent_node_id, exclude_field_id)
                     if matching_field_id:
-                        if matching_field_id not in dependencies and matching_field_id != exclude_field_id:
+                        if matching_field_id not in dependencies:
                             dependencies.append(matching_field_id)
                     else:
                         # 没有找到字段对象，创建物理表引用
@@ -1319,9 +1776,18 @@ class SQLNodeParser:
 
                     # 优先级3：从FROM子句的表中推断
                     if table_aliases:
+                        # 获取实际表名列表（兼容新旧格式）
+                        actual_tables = []
+                        for alias, alias_info in table_aliases.items():
+                            if isinstance(alias_info, dict):
+                                actual_tables.append(alias_info.get('table_name', alias))
+                            else:
+                                # 兼容旧格式（字符串）
+                                actual_tables.append(alias_info)
+
                         # 如果只有一个表，字段肯定来自这个表
-                        if len(table_aliases) == 1:
-                            table_name = list(table_aliases.values())[0]
+                        if len(actual_tables) == 1:
+                            table_name = actual_tables[0]
                             # 创建物理表引用
                             table_node = None
                             for node in self.nodes.values():
@@ -1335,7 +1801,13 @@ class SQLNodeParser:
                                     dependencies.append(physical_ref)
                         else:
                             # 多个表，尝试通过字段名推断
-                            for alias, actual_table in table_aliases.items():
+                            for alias, alias_info in table_aliases.items():
+                                # 获取实际表名（兼容新旧格式）
+                                if isinstance(alias_info, dict):
+                                    actual_table = alias_info.get('table_name', alias)
+                                else:
+                                    actual_table = alias_info
+
                                 # 检查这个表是否有这个字段（通过元数据或直接查找）
                                 if self._table_has_column(actual_table, column_name):
                                     table_node = None
@@ -1367,28 +1839,34 @@ class SQLNodeParser:
 
     def _find_field_in_ctes(self, column_name: str, parent_node_id: str) -> List[str]:
         """
-        在节点引用的CTE中查找字段（改进版 - 支持相邻CTE查找）
+        在节点引用的CTE中查找字段（改进版 - 支持别名映射）
 
         相邻引用关系：只在直接引用的CTE和子查询中查找，不跨越层级
         """
         # 找到节点引用的所有CTE和子查询
         referenced_nodes = []
+        cte_aliases = {}  # 新增：CTE别名映射
+
         for rel in self.relationships:
             if rel.source_id == parent_node_id:
-                # 包含CTE关系和子查询关系
                 if rel.type == 'REFERENCES' and rel.metadata.get('ref_type') == 'CTE':
                     referenced_nodes.append(rel.target_id)
+                    # 记录CTE别名
+                    alias = rel.metadata.get('alias')
+                    if alias:
+                        cte_aliases[alias.upper()] = rel.target_id
                 elif rel.type == 'CONTAINS':
-                    # 检查目标是否是CTE或SQ节点
                     target_node = self.nodes.get(rel.target_id)
                     if target_node and target_node.type in ['CT', 'SQ']:
                         referenced_nodes.append(rel.target_id)
+                        # 记录子查询别名
+                        if target_node.alias:
+                            cte_aliases[target_node.alias.upper()] = rel.target_id
 
         matching_fields = []
         for ref_node_id in referenced_nodes:
             ref_node = self.nodes.get(ref_node_id)
             if ref_node:
-                # 在CTE/子查询节点中查找字段（支持大小写不敏感匹配）
                 for field_id, field in self.fields.items():
                     if field.parent_node_id == ref_node_id:
                         # 优先级1: 精确匹配 column_name
@@ -1396,7 +1874,6 @@ class SQLNodeParser:
                             matching_fields.append(field_id)
                         # 优先级2: 大小写不敏感匹配
                         elif field.column_name.upper() == column_name.upper():
-                            # 避免重复添加
                             if field_id not in matching_fields:
                                 matching_fields.append(field_id)
                         # 优先级3: 匹配字段别名（field.name）
@@ -1413,39 +1890,92 @@ class SQLNodeParser:
         return True
 
     def _find_field_by_reference(self, table_name: str, column_name: str,
-                                  parent_node_id: str) -> Optional[str]:
+                                  parent_node_id: str, exclude_field_id: str = None) -> Optional[str]:
         """
-        根据表名和列名查找字段ID（改进版 - 支持大小写不敏感匹配）
+        根据表名和列名查找字段ID（改进版 - 支持别名解析）
 
         相邻引用关系：只在相邻作用域内查找
+
+        Args:
+            table_name: 表名或别名
+            column_name: 列名
+            parent_node_id: 父节点ID
+            exclude_field_id: 要排除的字段ID（防止自引用）
         """
+        # 获取当前节点的表别名映射
+        parent_node = self.nodes.get(parent_node_id)
+        table_aliases = parent_node.metadata.get('table_aliases', {}) if parent_node else {}
+
+        # 解析表别名
+        actual_table_name = table_name
+        target_node_id = None
+        is_cte_ref = False
+        is_subquery_ref = False
+
+        if table_name and table_name in table_aliases:
+            alias_info = table_aliases[table_name]
+            # 兼容新旧格式
+            if isinstance(alias_info, dict):
+                actual_table_name = alias_info.get('table_name', table_name)
+                target_node_id = alias_info.get('node_id')
+                is_cte_ref = alias_info.get('is_cte', False)
+                is_subquery_ref = alias_info.get('is_subquery', False)
+            else:
+                # 兼容旧格式（字符串）
+                actual_table_name = alias_info
+
+        # 【新增】优先级1：如果有目标节点ID（CTE或子查询），在对应节点中查找
+        if target_node_id:
+            for field_id, field in self.fields.items():
+                if (field.parent_node_id == target_node_id and
+                    field.column_name.upper() == column_name.upper()):
+                    if field_id != exclude_field_id:  # 排除自引用
+                        return field_id
+
+        # 【新增】优先级2：查找物理表字段（TB/VW节点）
+        # 这样可以避免找到同一个节点内的字段
+        if table_name and column_name:
+            # 尝试在物理表中查找（不限制节点）
+            for field_id, field in self.fields.items():
+                if field.column_name.upper() == column_name.upper():
+                    parent = self.nodes.get(field.parent_node_id)
+                    if parent and parent.type in ['TB', 'VW']:
+                        # 检查表名是否匹配
+                        field_table = field.table_name or ''
+                        # 支持多种匹配方式
+                        table_matches = (
+                            field_table.upper() == actual_table_name.upper() or
+                            field_table.upper().endswith('.' + actual_table_name.upper()) or
+                            actual_table_name.upper().endswith('.' + field_table.upper())
+                        )
+                        if table_matches and field_id != exclude_field_id:
+                            return field_id
+
+        # 【新增】优先级3：如果还没找到，在同一个节点内查找
+        if table_name and column_name:
+            # 在同一个节点内查找（使用实际表名）
+            for field_id, field in self.fields.items():
+                if (field.column_name.upper() == column_name.upper() and
+                    field.parent_node_id == parent_node_id):
+                    # 如果有表名，检查表名是否匹配（使用实际表名）
+                    if field.table_name.upper() == actual_table_name.upper():
+                        if field_id != exclude_field_id:
+                            return field_id
+
         # 如果没有表名，尝试只通过列名查找
-        if not table_name and column_name:
+        elif column_name:
             # 在同一个节点内查找（大小写不敏感）
             for field_id, field in self.fields.items():
                 if (field.column_name.upper() == column_name.upper() and
                     field.parent_node_id == parent_node_id):
-                    return field_id
+                    if field_id != exclude_field_id:
+                        return field_id
 
             # 如果没找到，尝试全局查找（大小写不敏感）
             for field_id, field in self.fields.items():
                 if field.column_name.upper() == column_name.upper():
-                    return field_id
-
-        # 如果有表名和列名，尝试精确匹配（大小写不敏感）
-        if table_name and column_name:
-            # 优先在同一个节点内查找
-            for field_id, field in self.fields.items():
-                if (field.column_name.upper() == column_name.upper() and
-                    field.table_name.upper() == table_name.upper() and
-                    field.parent_node_id == parent_node_id):
-                    return field_id
-
-            # 如果没找到，尝试全局查找（不限制节点）
-            for field_id, field in self.fields.items():
-                if (field.column_name.upper() == column_name.upper() and
-                    field.table_name.upper() == table_name.upper()):
-                    return field_id
+                    if field_id != exclude_field_id:
+                        return field_id
 
         return None
 

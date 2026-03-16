@@ -1,0 +1,3 @@
+﻿序号,关联类型,表名,表别名,关联条件
+1,FROM,LC00019999.DM_CUST_CORP_GXD_F,a,
+2,JOIN,temp,i,a.cust_code = i.cust_code

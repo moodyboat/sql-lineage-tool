@@ -1,0 +1,5 @@
+﻿序号,关联类型,表名,表别名,关联条件
+1,FROM,LC00059999.PJYFKC,p,
+2,JOIN,LC00059999.PJBDB,B1,P.PJYFKC_NM = B1.PJBDB_NM
+3,JOIN,LC00059999.PJKPZB,b,p.pjyfkc_kpzbnm = b.pjkpzb_nm
+4,JOIN,LC00059999.CPE_BL_CASH_COLL_BIZ,c,c.cont_id = /* 涉及外部贴现无承兑合同 */ b.acceptance_cont /* 涉及外部贴现无承兑合同 */

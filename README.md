@@ -42,19 +42,32 @@ pip install -r requirements.txt
 
 ```bash
 # 分析SQL文件
-python main.py <sql_file>
+python main.py data/sql/01_xxx/原始.sql
+
+# 批量分析所有SQL文件
+python batch_analyze.py
 
 # 导出JSON
-python main.py <sql_file> --output result.json
+python main.py data/sql/01_xxx/原始.sql --output result.json
 
 # 导出到Neo4j
-python main.py <sql_file> --export-neo4j
+python main.py data/sql/01_xxx/原始.sql --export-neo4j
 
 # 禁用元数据增强
-python main.py <sql_file> --no-metadata
+python main.py data/sql/01_xxx/原始.sql --no-metadata
 
 # 禁用作用域系统
-python main.py <sql_file> --no-scope
+python main.py data/sql/01_xxx/原始.sql --no-scope
+```
+
+### 查看分析结果
+
+```bash
+# 汇总报告
+cat outputs/lineage/汇总报告.csv
+
+# 某个任务的血缘分析
+cat outputs/lineage/01_xxx/字段血缘.csv
 ```
 
 ### Python API
@@ -63,7 +76,7 @@ python main.py <sql_file> --no-scope
 from src.parsers.sql_node_parser_v2 import SQLNodeParser
 
 # 解析SQL
-parser = SQLNodeParser(sql_content, dialect='mysql')
+parser = SQLNodeParser(sql_content, dialect='oracle')
 nodes, relationships = parser.parse()
 
 # 构建字段依赖
@@ -93,7 +106,7 @@ analyzer = EnhancedFieldLineageAnalyzer(
 )
 
 # 分析SQL
-result = analyzer.analyze_sql(sql_content, dialect='mysql')
+result = analyzer.analyze_sql(sql_content, dialect='oracle')
 
 # 查看结果
 parser = result['parser']
@@ -105,11 +118,20 @@ field_relationships = result['field_relationships']
 
 ```
 血缘分析工具/
-├── main.py                                  # 统一入口点
-├── batch_analyze_physical_field_mapping.py  # 批量分析工具
-├── query_final_fields_lineage.py            # Neo4j查询工具
+├── data/                    # 数据目录
+│   └── sql/                 # 原始SQL文件
+│       ├── 01_xxx/原始.sql
+│       └── ...
 │
-├── src/                                     # 核心代码
+├── outputs/                 # 输出结果目录
+│   └── lineage/            # 血缘分析结果
+│       ├── 汇总报告.csv
+│       ├── 01_xxx/
+│       │   ├── 字段血缘.csv
+│       │   └── 表关联关系.csv
+│       └── ...
+│
+├── src/                     # 核心代码
 │   ├── parsers/
 │   │   └── sql_node_parser_v2.py           # SQL解析器 (基于sqlglot AST)
 │   ├── analyzers/
@@ -134,8 +156,14 @@ field_relationships = result['field_relationships']
 │   ├── 大数据ods的实例库表字段.csv
 │   └── 大数据dw和dm的实例库表字段.csv
 │
+├── main.py                                  # 统一入口点
+├── batch_analyze.py                        # 批量分析工具
+├── trace_field_lineage.py                  # 字段血缘追踪
+├── extract_table_joins.py                  # 表关联提取
+│
 ├── README.md                                # 本文件
-└── CLAUDE.md                                # Claude Code指南
+├── CLAUDE.md                                # Claude Code指南
+└── DIRECTORY_STRUCTURE.md                   # 目录结构详细说明
 ```
 
 ## 🔧 核心架构
@@ -184,7 +212,7 @@ Outer Query (外层查询)
 ### 导出到Neo4j
 
 ```bash
-python main.py <sql_file> --export-neo4j \
+python main.py data/sql/01_xxx/原始.sql --export-neo4j \
   --uri bolt://localhost:7687 \
   --user neo4j \
   --password password

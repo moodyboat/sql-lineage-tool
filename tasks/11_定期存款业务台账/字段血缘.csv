@@ -1,0 +1,2 @@
+﻿输出字段名,来源表名,来源字段名,是否可追踪
+CUST_NAME,DW_CUST_CORP_LE_F_BK,CUST_NAME,是

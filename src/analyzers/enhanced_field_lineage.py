@@ -55,8 +55,13 @@ class EnhancedFieldLineageAnalyzer:
         Returns:
             分析结果字典
         """
-        # 创建解析器
-        parser = SQLNodeParser(sql, dialect=dialect, use_scope_system=use_scope_system)
+        # 创建解析器（传递元数据管理器）
+        parser = SQLNodeParser(
+            sql,
+            dialect=dialect,
+            use_scope_system=use_scope_system,
+            metadata_manager=self.metadata_manager if self.use_metadata else None
+        )
 
         # 解析SQL
         nodes, relationships = parser.parse()

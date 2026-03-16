@@ -1,0 +1,5 @@
+﻿序号,关联类型,表名,表别名,关联条件
+1,FROM,LC00059999.CORP_LOAN_STDBOOK,bk,
+2,JOIN,LC00059999.CORP_LOAN_CONT_BASE,ht,jj.cont_id = ht.cont_id
+3,JOIN,LC00059999.CUST_CORP_INFO,cc,bk.cust_code = cc.cust_code
+4,JOIN,LC00059999.CORP_LOAN_EXTEND_TERM,zq,zq.due_bill_id = jj.due_bill_id

@@ -41,7 +41,7 @@ def main():
     )
 
     parser.add_argument('sql_file', help='SQL文件路径')
-    parser.add_argument('--dialect', default='mysql', help='SQL方言（默认: mysql）')
+    parser.add_argument('--dialect', default='oracle', help='SQL方言（默认: oracle）')
     parser.add_argument('--output', help='输出JSON文件路径')
     parser.add_argument('--export-neo4j', action='store_true', help='导出到Neo4j')
     parser.add_argument('--no-metadata', action='store_true', help='禁用元数据增强')
